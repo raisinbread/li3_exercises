@@ -22,7 +22,7 @@ class Exercise extends \lithium\core\Object {
 	 * @see lithium\core\Object
 	 * @var string
 	 */
-	protected $_autoConfig = array('command');
+	protected $_autoConfig = array('command', 'methodPrefix');
 	
 	/**
 	 * An Command instance used for I/O.
@@ -32,21 +32,56 @@ class Exercise extends \lithium\core\Object {
 	protected $_command = null;
 	
 	/**
-	 * Exercise initialization.
+	 * Prefix for methods used in exercise.
+	 *
+	 * @var string
+	 */
+	protected $_methodPrefix = 'explain';
+	
+	/**
+	 * A list of steps to be completed for this exercise.
+	 *
+	 * @var array
+	 */
+	protected $_steps = array();
+	
+	/**
+	 * Exercise init. Each method in the exercise prefixed with $this->_methodPrefix ('explain', 
+	 * by default) is considered a step in the exercise. Steps are run() in the order they were
+	 * originally defined.
 	 *
 	 * @return void
 	 */
 	public function _init() {
 		parent::_init();
-		$this->loadSectionsFromScript();
-	}
-	
-	protected function loadSectionsFromScript() {
-		$info = Inspector::info(get_class($this));
-		$script = dirname($info['file']) . '/scripts/' . $info['shortName'] . '.json';
-		if(file_exists($script)) {
-			$contents = json_decode(file_get_contents($script), 1);
-			$this->_command->out(print_r($contents, 1));
+		$methods = Inspector::methods($this)->to('array');
+		foreach($methods as $method) {
+			if(substr($method['name'], 0, strlen($this->_methodPrefix)) === $this->_methodPrefix) {
+				$this->_steps[] = $method['name'];
+			}
 		}
 	}
-}
+	
+	/**
+	 * Runs the steps in this exercise.
+	 *
+	 * @return void
+	 */
+ 	public function run() {
+ 		foreach($this->_steps as $step) {
+ 			$this->$step();
+ 		}
+ 	}
+	
+	/**
+	 * Convenience wrapping for /lithium/console/Command class for easy 
+	 * command-line input/output and formatting.
+	 *
+	 * @param string $name 
+	 * @param string $arguments 
+	 * @return mixed
+	 */
+	public function __call($name, $arguments) {
+		return $this->_command->invokeMethod($name, $arguments);
+	}
+}	

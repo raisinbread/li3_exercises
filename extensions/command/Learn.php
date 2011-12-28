@@ -69,6 +69,7 @@ class Learn extends \lithium\console\Command {
 		if(isset($this->_exercises[$command])) {
 			$className = $this->_exercises[$command];
 			$exercise = new $className(array('command' => $this));
+			$exercise->run();
 		} else {
 			$this->out("{:error}The exercise {:end}{:blue}\"$command\"{:end}{:error} you specified cannot be found. Please supply a valid exercise name.{:end}");
 			$this->out();

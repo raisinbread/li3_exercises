@@ -14,5 +14,7 @@ use li3_exercises\extensions\exercise\Exercise;
  *  Example exercise.
  */
 class Example extends Exercise {
-
+	public function explainIntro() {
+		$this->header('Welcome!');
+	}
 }
