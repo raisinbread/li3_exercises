@@ -109,7 +109,7 @@ class Exercise extends \lithium\core\Object {
 				$this->_initUnit();
 				$this->$step();
 				$results = $this->_unit->results();
-				if($this->stepSuccess($results)) {
+				if($this->_stepSuccess($results)) {
 					$this->_logLastCompletedStep($step);
 					$this->_command->clear();
 					$success = true;
@@ -226,7 +226,7 @@ class Exercise extends \lithium\core\Object {
 	 *
 	 * @author John Anderson
 	 */
-	protected function stepSuccess($results) {
+	protected function _stepSuccess($results) {
 		$success = true;
 		foreach($results as $result) {
 			$success = $success && ($result['result'] == 'pass');

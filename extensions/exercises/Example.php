@@ -14,6 +14,12 @@ use li3_exercises\extensions\exercise\Exercise;
  *  Example exercise.
  */
 class Example extends Exercise {
+	
+	/**
+	 * Introduction.
+	 *
+	 * @return void
+	 */
 	public function explainIntro() {
 		$this->header('Introduction');
 		
@@ -21,6 +27,11 @@ class Example extends Exercise {
 		$this->pause();
 	}
 	
+	/**
+	 * Create file step.
+	 *
+	 * @return void
+	 */
 	public function explainCreateFile() {
 		$this->header("Creating the Exercise File");
 		
@@ -31,6 +42,11 @@ class Example extends Exercise {
 		$this->assertTrue(file_exists(LITHIUM_APP_PATH . '/extensions/exercises/Blog.php'), "I can't seem to see the file yet. Make sure you've created a new file at {:green}app/extensions/exercises/Blog.php{:end}.");
 	}
 	
+	/**
+	 * Exercise class creation step.
+	 *
+	 * @return void
+	 */
 	public function explainCreateClass() {
 		$this->header("Creating an Exercise");
 		
@@ -47,6 +63,11 @@ class Example extends Exercise {
 		}
 	}
 
+	/**
+	 * "Explain" methods step.
+	 *
+	 * @return void
+	 */
 	public function explainExplainMethods() {
 		$this->header("The Explain Methods");
 		
@@ -57,7 +78,12 @@ class Example extends Exercise {
 		$methods = \lithium\analysis\Inspector::methods('\li3_exercises\extensions\exercises\Blog', 'extents');
 		$this->assertTrue(isset($methods['explainIntro']), "Hmmm. I can't seem to find a method defined on your new Blog class named '{:purple}explainIntro{:end}'. {:error}Make sure it has public visibility!{:end}");
 	}
-	
+
+	/**
+	 * Command I/O step.
+	 *
+	 * @return void
+	 */
 	public function explainCommandUsage() {
 		$this->header("Exercises are Commands");
 		
@@ -70,10 +96,20 @@ class Example extends Exercise {
 		$this->assertTrue(strstr($intro, '------------------------------------') !== false, 'Did you forget to call {:purple}$this->header(){:end}{:error}?{:end}');
 	}
 	
+	/**
+	 * Unit test explanation step.
+	 *
+	 * @return void
+	 */
 	public function explainUnitUsage() {
 		
 	}
 	
+	/**
+	 * Helper function for grabbing example exercise output.
+	 *
+	 * @return string
+	 */
 	protected function _getIntroOutput() {
 		$tmpFile = LITHIUM_APP_PATH . '/resources/tmp/' . uniqid() . '.tmp';
 		$output = fopen($tmpFile, 'x');
