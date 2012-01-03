@@ -50,7 +50,7 @@ class Example extends Exercise {
 	public function explainCreateClass() {
 		$this->header("Creating an Exercise");
 		
-		$this->out("Now, let's create a class inside that file. Make sure it has the right namespace, and name the class {:purple}Blog{:end}. Make sure that it extends the {:purple}\li3_exercises\exercise\Exercise{:end} class.");
+		$this->out("Now, let's create a class inside that file. Make sure it has the right namespace, and name the class {:purple}Blog{:end}. Make sure that it extends the {:purple}\li3_exercises\extensions\exercise\Exercise{:end} class.");
 		$this->halt();
 		
 		require_once(LITHIUM_APP_PATH . '/extensions/exercises/Blog.php');
