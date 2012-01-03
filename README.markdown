@@ -1,4 +1,4 @@
-# li3 Exercises
+# li3_exercises
 
 This Lithium project aims to take project and library documentation one step further by providing _interactive_ documentation, rather than just prose.
 
