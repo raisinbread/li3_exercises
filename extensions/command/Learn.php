@@ -57,14 +57,14 @@ class Learn extends \lithium\console\Command {
 	 */
 	public function run($command = null) {
 		if($command == null) {
+			$this->out("{:heading}EXERCISES{:end}");
 			foreach ($this->_exercises as $key => $exercise) {
 				$library = strtok($exercise, '\\');
-				$this->out("{:heading}EXERCISES{:end} {:blue}via {$library}{:end}");
 				$info = Inspector::info($exercise);
-				$this->out($this->_pad($key) , 'heading');
-				$this->out($this->_pad($info['description']), 2);
-				$this->stop();
+				$this->out($this->_pad($key . " {:blue}via {$library}{:end}") , 'heading');
+				$this->out($this->_pad(($info['description'] == '' ? '(No description)' : $info['description'])), 2);
 			}
+			$this->stop();
 		}
 		if(isset($this->_exercises[$command])) {
 			$className = $this->_exercises[$command];
