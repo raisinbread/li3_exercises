@@ -34,7 +34,7 @@ class Learn extends \lithium\console\Command {
 		Libraries::paths(array('exercises' => '{:library}\extensions\exercises\{:name}'));
 		$exercises = Libraries::locate('exercises');
 		foreach($exercises as $exercise) {
-			$this->_exercises[$this->_exerciseName($exercise)] = $exercise;
+			$this->_exercises[$this->exerciseName($exercise)] = $exercise;
 		}
 	}
 	
@@ -43,7 +43,7 @@ class Learn extends \lithium\console\Command {
 	 *
 	 * @return string
 	 */
-	protected function _exerciseName($className) {
+	public function exerciseName($className) {
 		$info = Inspector::info($className);
 		return strtolower(Inflector::slug($info['shortName']));
 	}

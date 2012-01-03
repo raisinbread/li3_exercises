@@ -8,6 +8,7 @@
 
 namespace li3_exercises\extensions\exercise;
 
+use li3_exercises\extensions\command\Learn;
 use lithium\analysis\Inspector;
 use lithium\test\Unit;
 
@@ -102,6 +103,7 @@ class Exercise extends \lithium\core\Object {
 	 * @return void
 	 */
  	public function run() {
+		$this->_command->clear();
 		$this->_moveToLatestStep();
 		foreach($this->_steps as $step) {
 			$success = false;
@@ -138,7 +140,6 @@ class Exercise extends \lithium\core\Object {
 	 *
 	 * @param string $results 
 	 * @return void
-	 * @author John Anderson
 	 */
 	protected function _printErrors($results) {
 		
@@ -156,7 +157,6 @@ class Exercise extends \lithium\core\Object {
 	 * Returns the name of the log file for this exercise.
 	 *
 	 * @return void
-	 * @author John Anderson
 	 */
 	protected function _getLogFileName() {
 		$tmpDir = LITHIUM_APP_PATH . '/resources/tmp';
@@ -168,7 +168,6 @@ class Exercise extends \lithium\core\Object {
 	 * Removes the log file for this exercise.
 	 *
 	 * @return void
-	 * @author John Anderson
 	 */
 	protected function _clearLogFile() {
 		unlink($this->_getLogFileName());
@@ -178,7 +177,6 @@ class Exercise extends \lithium\core\Object {
 	 * Returns the name of the last completed step, or boolean false if none found.
 	 *
 	 * @return void
-	 * @author John Anderson
 	 */
 	protected function _getLastCompletedStep() {
 		$filename = $this->_getLogFileName();
@@ -194,7 +192,6 @@ class Exercise extends \lithium\core\Object {
 	/**
 	 * Moves to the last completed step, if one is found.
 	 *
-	 * @author John Anderson
 	 */
 	protected function _moveToLatestStep() {
 		$lastStep = $this->_getLastCompletedStep();
@@ -224,7 +221,6 @@ class Exercise extends \lithium\core\Object {
 	/**
 	 * Verifies step results.
 	 *
-	 * @author John Anderson
 	 */
 	protected function _stepSuccess($results) {
 		$success = true;
@@ -240,7 +236,6 @@ class Exercise extends \lithium\core\Object {
 	 *
 	 * @param string $message 
 	 * @return void
-	 * @author John Anderson
 	 */
 	public function pause($message = '') {
 		$fillerMessages = array(
@@ -255,6 +250,25 @@ class Exercise extends \lithium\core\Object {
 		}
 		$this->out();
 		$this->in("{:cyan}" . $message . "{:end}");
+	}
+	
+	/**
+	 * Stops the exercise. Used to stop execution so that classes can be reloaded.
+	 * Shows a prompt explaining this to the user.
+	 *
+	 * @param string $message 
+	 * @return void
+	 */
+	public function halt($message = '') {
+		$learn = new Learn();
+		$exerciseName = $learn->exerciseName(get_class($this));
+		
+		$this->out("\n{:cyan}This step requires the exercise to be reloaded. To pick up again where you left off, just run:{:end}");
+		$this->out("{:purple}li3 learn $exerciseName{:end}\n");
+		$response = $this->_command->in("Press {:red}ENTER{:end} to quit.\nIf you're back after a reload, enter '{:green}c{:end}' and we'll check your progress.");
+		if(strtolower($response) != 'c' && substr($response, 0, 1) != 'c') {
+			$this->_command->stop();
+		}
 	}
 	
 	/**

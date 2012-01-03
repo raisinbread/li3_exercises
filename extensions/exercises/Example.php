@@ -23,7 +23,7 @@ class Example extends Exercise {
 	public function explainIntro() {
 		$this->header('Introduction');
 		
-		$this->out("This is an example exercise that shows you how to *create* another exercise! Not too meta for you?");
+		$this->out("This is an example exercise that shows you how to {:purple}create{:end} another exercise! Not too meta for you?");
 		$this->pause();
 	}
 	
@@ -35,11 +35,11 @@ class Example extends Exercise {
 	public function explainCreateFile() {
 		$this->header("Creating the Exercise File");
 		
-		$this->out("The first thing you need to do is create an exercise file. Let's create a new exercise called `Blog.` Do this by creating a new file in {:green}app/extensions/exercises/Blog.php{:end}.\n");
-		$this->out("You'll need to do it in another terminal session or something.");
+		$this->out("The first thing you need to do is create an exercise file. Let's create a new exercise called `Blog.` Do this by creating a new file in {:purple}li3_exercises/extensions/exercises/Blog.php{:end}.\n");
+		$this->out("Open a new terminal session and create the file.");
 		$this->pause();
 		
-		$this->assertTrue(file_exists(LITHIUM_APP_PATH . '/extensions/exercises/Blog.php'), "I can't seem to see the file yet. Make sure you've created a new file at {:green}app/extensions/exercises/Blog.php{:end}.");
+		$this->assertTrue(file_exists(LITHIUM_APP_PATH . '/extensions/exercises/Blog.php'), "I can't seem to see the file yet. Make sure you've created a new file at {:purple}" .  LITHIUM_APP_PATH . "/extensions/exercises/Blog.php{:end}.");
 	}
 	
 	/**
@@ -51,7 +51,7 @@ class Example extends Exercise {
 		$this->header("Creating an Exercise");
 		
 		$this->out("Now, let's create a class inside that file. Make sure it has the right namespace, and name the class {:purple}Blog{:end}. Make sure that it extends the {:purple}\li3_exercises\exercise\Exercise{:end} class.");
-		$this->pause();
+		$this->halt();
 		
 		require_once(LITHIUM_APP_PATH . '/extensions/exercises/Blog.php');
 		$classExists = class_exists('\li3_exercises\extensions\exercises\Blog');
@@ -59,7 +59,7 @@ class Example extends Exercise {
 		
 		if($classExists) {
 			$blog = new \li3_exercises\extensions\exercises\Blog();
-			$this->assertTrue(is_a($blog, '\li3_exercises\extensions\exercise\Exercise'), "Oops! Make sure that the new Blog class extends {:green}li3_exercises\extensions\exercise\Exercise{:end}.");
+			$this->assertTrue(is_a($blog, '\li3_exercises\extensions\exercise\Exercise'), "Oops! Make sure that the new Blog class extends {:purple}li3_exercises\extensions\exercise\Exercise{:end}.");
 		}
 	}
 
@@ -73,7 +73,7 @@ class Example extends Exercise {
 		
 		$this->out("The next step is to create your first `explain` method. When an exercise is run, each user-defined method that begins with 'explain' is run in the order it was defined.\n");
 		$this->out("Let's start by defining a new method called `explainIntro`.");
-		$this->pause();
+		$this->halt();
 		
 		$methods = \lithium\analysis\Inspector::methods('\li3_exercises\extensions\exercises\Blog', 'extents');
 		$this->assertTrue(isset($methods['explainIntro']), "Hmmm. I can't seem to find a method defined on your new Blog class named '{:purple}explainIntro{:end}'. {:error}Make sure it has public visibility!{:end}");
@@ -89,7 +89,7 @@ class Example extends Exercise {
 		
 		$this->out("Now that you've got a method, your first step is letting your student know what's going on. Each instance of `Exercise` can also act much like a command. You can send output to your student by using the `header`, `out`, and other similar methods of the \lithium\console\Command class.\n");
 		$this->out("It's common to start each step with a header. Add a header call to your `explainIntro` method, followed by another call to `out`. This will serve as your introduction.");
-		$this->pause();
+		$this->halt();
 		$intro = $this->_getIntroOutput();
 		
 		$this->assertTrue(strlen($intro) > 1, 'Your `explainIntro` method didn\'t seem to have any output. Try calling {:purple}$this->out(){:end} or {:purple}$this->header(){:end}.');
@@ -102,7 +102,35 @@ class Example extends Exercise {
 	 * @return void
 	 */
 	public function explainUnitUsage() {
+		$this->header("Exercises Are Also Unit Tests");
 		
+		$this->out("Exercises also behave a bit like a unit test. You can make sure your student is making progress by using assertions. Much like the Command methods, the Exercise class also mixes in unit test assertion methods. For example, at the beginning of this exercise, I made sure you had created the Blog.php file using code that looked something like this:\n");
+		$this->out('{:purple}$this->assertTrue(file_exists(...));{:end}');
+		
+		$this->pause();
+	}
+	
+	/**
+	 * Final step - conclusion and review.
+	 *
+	 * @return void
+	 */
+	public function explainConclusion() {
+		$this->header("Wrap Up");
+		
+		$this->out("That's it! In review: each exercise is made of the following elements:\n");
+		
+		$this->out("\t- A new class, in app/extensions/exercises/");
+		$this->out("\t- The new class extends Exercise");
+		$this->out("\t- The class contains methods with the `explain` prefix");
+		$this->out("\t- Command methods are used to teach and gather input");
+		$this->out("\t- Unit methods are used to assert that the student is making progress\n");
+		
+		$this->out("A few more tricks before you leave. Make sure to use the {:purple}pause(){:end} method to let Lithium know you're waiting for your student to make some progress. It's best to call your assert methods right after a pause.\n");
+		$this->out("Occasionally you'll need to reload PHP in order to see changes made to a class that's been defined. Use the {:purple}halt(){:end} method to stop the user. The exercise will automatically pick up where it left off.");
+		
+		$this->out("\n\n{:green} Happy documenting!{:end}");
+		$this->pause();
 	}
 	
 	/**
